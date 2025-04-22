@@ -7,7 +7,9 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__,
+           static_folder='../static',
+           template_folder='../templates')
 
 # Configure Gemini API
 # Note: You'll need to replace this with your actual API key
