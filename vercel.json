@@ -1,0 +1,30 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "src": "api/app.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/static/(.*)",
+            "dest": "/static/$1"
+        },
+        {
+            "src": "/saved",
+            "dest": "/api/app.py"
+        },
+        {
+            "src": "/get_gift_suggestions",
+            "methods": [
+                "POST"
+            ],
+            "dest": "/api/app.py"
+        },
+        {
+            "src": "/",
+            "dest": "/api/app.py"
+        }
+    ]
+}
