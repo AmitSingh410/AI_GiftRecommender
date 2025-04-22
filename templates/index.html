@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>AI Instant Gift Finder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>AI Instant Gift Finder</h1>
+                <p>Find the perfect gift based on personality</p>
+            </div>
+            <div class="header-actions">
+                <a href="/saved" class="saved-link">
+                    <i class="fas fa-bookmark"></i> Saved Suggestions
+                </a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Popular Gifts Section -->
+                <section class="sidebar-section popular-gifts">
+                    <h2>Popular Gift Ideas</h2>
+                    <div class="popular-gifts-grid" id="popular-gifts">
+                        <!-- Popular gifts will be populated by JavaScript -->
+                    </div>
+                </section>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="main-content">
+                <!-- Main Gift Finder Form -->
+                <section class="input-section">
+                    <h2>Tell us about the recipient</h2>
+                    <form id="gift-form">
+                        <div class="form-group">
+                            <label for="name">Recipient's Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" name="age" min="1" max="120" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="non-binary">Non-binary</option>
+                                    <option value="prefer not to say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interests">Interests/Hobbies (comma separated)</label>
+                            <input type="text" id="interests" name="interests" placeholder="e.g., reading, hiking, cooking" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="occasion">Occasion</label>
+                                <select id="occasion" name="occasion" required>
+                                    <option value="">Select occasion</option>
+                                    <option value="birthday">Birthday</option>
+                                    <option value="anniversary">Anniversary</option>
+                                    <option value="christmas">Christmas</option>
+                                    <option value="graduation">Graduation</option>
+                                    <option value="wedding">Wedding</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="budget">Budget</label>
+                                <select id="budget" name="budget" required>
+                                    <option value="">Select budget</option>
+                                    <option value="under $25">Under $25</option>
+                                    <option value="$25-$50">$25-$50</option>
+                                    <option value="$50-$100">$50-$100</option>
+                                    <option value="$100-$200">$100-$200</option>
+                                    <option value="$200+">$200+</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" id="submit-btn">Find Gift Ideas</button>
+                    </form>
+                </section>
+                
+                <section class="recipient-info hidden" id="recipient-info">
+                    <h2>Recipient Information</h2>
+                    <div class="recipient-details">
+                        <div class="detail-item">
+                            <strong>Name</strong>
+                            <span id="info-name"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Age</strong>
+                            <span id="info-age"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Gender</strong>
+                            <span id="info-gender"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Interests</strong>
+                            <span id="info-interests"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Occasion</strong>
+                            <span id="info-occasion"></span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Budget</strong>
+                            <span id="info-budget"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="results-section" id="results-section">
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Generating gift ideas...</p>
+                    </div>
+                    
+                    <div id="results-container" class="hidden">
+                        <div class="results-header">
+                            <h2>Gift Suggestions for <span id="recipient-name"></span></h2>
+                            <div class="results-actions">
+                                <button class="share-btn" id="share-btn">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                                <button class="save-btn" id="save-btn">
+                                    <i class="fas fa-bookmark"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                        <div id="gift-suggestions"></div>
+                    </div>
+                    
+                    <div id="error-message" class="hidden">
+                        <p>Sorry, we couldn't generate gift suggestions at this time. Please try again later.</p>
+                    </div>
+                </section>
+
+                <!-- Why Choose Us Section -->
+                <section class="why-choose-us">
+                    <h2>Why Choose Us?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-robot"></i>
+                            <h3>AI-Powered</h3>
+                            <p>Smart suggestions based on personality</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-clock"></i>
+                            <h3>Instant Results</h3>
+                            <p>Get personalized gift ideas in seconds</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-gift"></i>
+                            <h3>Unique Ideas</h3>
+                            <p>Discover thoughtful gift options</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-wallet"></i>
+                            <h3>Budget Friendly</h3>
+                            <p>Find gifts within your price range</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Powered by Gemini AI | Created with ❤️</p>
+        </footer>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Share Gift Ideas</h3>
+            <div class="share-options">
+                <button class="share-option" data-platform="whatsapp">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="share-option" data-platform="email">
+                    <i class="fas fa-envelope"></i> Email
+                </button>
+                <button class="share-option" data-platform="copy">
+                    <i class="fas fa-link"></i> Copy Link
+                </button>
+            </div>
+            <button class="close-modal">Close</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
