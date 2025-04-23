@@ -13,7 +13,7 @@ app = Flask(__name__,
 
 # Configure Gemini API
 # Note: You'll need to replace this with your actual API key
-API_KEY = "pAIzaSyCUIXdoqeznuryXMgVM1vcBMopqTzmwbS4"
+API_KEY = "AIzaSyCf7EZu8yEErwwc7kxwtpc1uSm0GvXLXbc"
 os.environ['GOOGLE_API_KEY'] = API_KEY
 genai.configure(api_key=API_KEY)
 
